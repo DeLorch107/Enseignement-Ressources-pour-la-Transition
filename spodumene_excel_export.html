@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spodumene Data Export to Excel</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f7fa;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.2em;
+        }
+        .export-section {
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+        .preview-table {
+            margin: 15px 0;
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 12px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .preview-table th, .preview-table td {
+            border: 1px solid #e0e6ed;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        .preview-table th {
+            background-color: #34495e;
+            color: white;
+            font-weight: 600;
+        }
+        .preview-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        .preview-table tr:hover {
+            background-color: #e3f2fd;
+        }
+        .info-box {
+            background: #e8f5e8;
+            border: 1px solid #4caf50;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .worksheet-title {
+            color: #2980b9;
+            font-size: 1.3em;
+            margin: 20px 0 10px 0;
+            font-weight: 600;
+        }
+        .data-count {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🗂️ Spodumene Project Data - Excel Export</h1>
+        
+        <div class="info-box">
+            <strong>📊 Export Information:</strong><br>
+            This tool will create an Excel file with multiple worksheets containing all the technical and economic data from the Mt. Holland, Ewoyaa, and Grota do Cirilo lithium projects. Each table will be on a separate worksheet for easy analysis.
+        </div>
+
+        <div class="export-section">
+            <button class="btn" onclick="exportToExcel()">📥 Download Excel File</button>
+            <p style="margin-top: 15px; color: #666;">Click to generate and download a comprehensive Excel workbook with all project data tables.</p>
+        </div>
+
+        <h2 style="color: #34495e; margin-top: 40px;">📋 Data Preview - Tables to be Exported:</h2>
+
+        <div class="worksheet-title">1. Crushing Systems</div>
+        <div class="data-count">3 projects compared</div>
+        <table class="preview-table">
+            <thead>
+                <tr><th>Project</th><th>Technology</th><th>Details</th><th>Reference</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Mt. Holland</td><td>Two-stage + HPGR</td><td>Advanced crushing circuit</td><td>p.72, 76</td></tr>
+                <tr><td>Ewoyaa</td><td>3-stage to 10mm</td><td>Conventional approach</td><td>p.35</td></tr>
+                <tr><td>Grota do Cirilo</td><td>3-stage</td><td>Standard configuration</td><td>p.23</td></tr>
+            </tbody>
+        </table>
+
+        <div class="worksheet-title">2. Primary Processing Methods</div>
+        <div class="data-count">4 processing technologies compared</div>
+        <table class="preview-table">
+            <thead>
+                <tr><th>Project</th><th>Grinding</th><th>DMS</th><th>Flotation</th><th>Magnetic Separation</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Mt. Holland</td><td>Ball Mill</td><td>Two-stage</td><td>Included</td><td>N/S in MCO</td></tr>
+                <tr><td>Ewoyaa</td><td>N/S (DMS-only)</td><td>Conventional</td><td>N/S</td><td>N/S</td></tr>
+                <tr><td>Grota do Cirilo</td><td>N/S</td><td>Multi-stage</td><td>N/S</td><td>Fines processing</td></tr>
+            </tbody>
+        </table>
+
+        <div class="worksheet-title">3. Product Specifications & Performance</div>
+        <div class="data-count">5 project phases analyzed</div>
+        <table class="preview-table">
+            <thead>
+                <tr><th>Project</th><th>SC6 Grade Target</th><th>Recovery Rate</th><th>Reference</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Mt. Holland</td><td>>5.5% Li₂O</td><td>77.6% (pilot), 77.2% LoM avg</td><td>p.14, 17, 52</td></tr>
+                <tr><td>Ewoyaa</td><td>5.5% Li₂O</td><td>62.5%</td><td>p.13</td></tr>
+                <tr><td>Grota do Cirilo - Xuxa</td><td>6.0% Li₂O</td><td>60.4%</td><td>p.8–9</td></tr>
+                <tr><td>Grota do Cirilo - Barreiro</td><td>6.0% Li₂O</td><td>50.9%</td><td>p.8–9</td></tr>
+                <tr><td>Grota do Cirilo - NDC</td><td>5.5% Li₂O</td><td>50.6%</td><td>p.8–9</td></tr>
+            </tbody>
+        </table>
+
+        <div class="worksheet-title">4. CAPEX Analysis</div>
+        <div class="data-count">Capital expenditure breakdown</div>
+        <table class="preview-table">
+            <thead>
+                <tr><th>Project</th><th>Total CAPEX (US$M)</th><th>Proportion of Total Project</th><th>Reference</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Mt. Holland</td><td>453.6</td><td>37% of US$1.226B total</td><td>p.12, 16</td></tr>
+                <tr><td>Ewoyaa</td><td>125.0</td><td>Project-specific</td><td>p.2, 13</td></tr>
+                <tr><td>Grota do Cirilo - Xuxa</td><td>69.8</td><td>Phase 1</td><td>p.31</td></tr>
+                <tr><td>Grota do Cirilo - Barreiro/NDC</td><td>96.3</td><td>Phases 2&3</td><td>p.31</td></tr>
+            </tbody>
+        </table>
+
+        <div class="worksheet-title">5. OPEX Analysis</div>
+        <div class="data-count">Operating expenditure comparison</div>
+        <table class="preview-table">
+            <thead>
+                <tr><th>Project</th><th>OPEX Rate</th><th>Basis</th><th>Reference</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Mt. Holland</td><td>50% of US$4,989/t</td><td>Per ton LiOH (integrated)</td><td>p.13</td></tr>
+                <tr><td>Ewoyaa</td><td>US$7.77/t</td><td>Per tonne ore processed</td><td>p.48</td></tr>
+                <tr><td>Grota do Cirilo - Xuxa</td><td>US$10.4/t</td><td>Per tonne ore feed</td><td>p.32</td></tr>
+                <tr><td>Grota do Cirilo - Barreiro/NDC</td><td>US$7.1/t</td><td>Per tonne ore feed</td><td>p.32</td></tr>
+            </tbody>
+        </table>
+
+        <p style="color: #7f8c8d; font-style: italic; margin-top: 30px;">
+            💡 The Excel file will contain all tables shown above plus additional worksheets for Advanced Processing Features, Work Index Data, Energy Requirements, Water Consumption, and Reagents & Consumables.
+        </p>
+    </div>
+
+    <script>
+        function exportToExcel() {
+            // Create workbook
+            const wb = XLSX.utils.book_new();
+            
+            // 1. Crushing Systems
+            const crushingData = [
+                ['Project', 'Technology', 'Details', 'Reference'],
+                ['Mt. Holland', 'Two-stage + HPGR', 'Advanced crushing circuit', 'p.72, 76'],
+                ['Ewoyaa', '3-stage to 10mm', 'Conventional approach', 'p.35'],
+                ['Grota do Cirilo', '3-stage', 'Standard configuration', 'p.23']
+            ];
+            const ws1 = XLSX.utils.aoa_to_sheet(crushingData);
+            XLSX.utils.book_append_sheet(wb, ws1, 'Crushing Systems');
+            
+            // 2. Primary Processing Methods
+            const processingData = [
+                ['Project', 'Grinding', 'DMS', 'Flotation', 'Magnetic Separation'],
+                ['Mt. Holland', 'Ball Mill', 'Two-stage', 'Included', 'N/S in MCO'],
+                ['Ewoyaa', 'N/S (DMS-only)', 'Conventional', 'N/S', 'N/S'],
+                ['Grota do Cirilo', 'N/S', 'Multi-stage', 'N/S', 'Fines processing']
+            ];
+            const ws2 = XLSX.utils.aoa_to_sheet(processingData);
+            XLSX.utils.book_append_sheet(wb, ws2, 'Processing Methods');
+            
+            // 3. Advanced Processing Features
+            const advancedData = [
+                ['Project', 'Specialized Equipment', 'Reference'],
+                ['Mt. Holland', 'Reflux classifier', 'p.72, 76'],
+                ['Ewoyaa', 'Standard DMS media', 'p.2'],
+                ['Grota do Cirilo', 'Upflow classification', 'p.23']
+            ];
+            const ws3 = XLSX.utils.aoa_to_sheet(advancedData);
+            XLSX.utils.book_append_sheet(wb, ws3, 'Advanced Features');
+            
+            // 4. Work Index Data
+            const workIndexData = [
+                ['Project', 'Bond Work Index (BWi)', 'Reference'],
+                ['Mt. Holland', 'N/S', '-'],
+                ['Ewoyaa', '7.8–11.0 kWh/t', 'p.31'],
+                ['Grota do Cirilo', 'N/S (HLS tests noted)', 'p.9']
+            ];
+            const ws4 = XLSX.utils.aoa_to_sheet(workIndexData);
+            XLSX.utils.book_append_sheet(wb, ws4, 'Work Index');
+            
+            // 5. Product Specifications & Performance
+            const productData = [
+                ['Project', 'SC6 Grade Target', 'Recovery Rate', 'Reference'],
+                ['Mt. Holland', '>5.5% Li₂O', '77.6% (pilot), 77.2% LoM avg', 'p.14, 17, 52'],
+                ['Ewoyaa', '5.5% Li₂O', '62.5%', 'p.13'],
+                ['Grota do Cirilo - Xuxa', '6.0% Li₂O', '60.4%', 'p.8–9'],
+                ['Grota do Cirilo - Barreiro', '6.0% Li₂O', '50.9%', 'p.8–9'],
+                ['Grota do Cirilo - NDC', '5.5% Li₂O', '50.6%', 'p.8–9']
+            ];
+            const ws5 = XLSX.utils.aoa_to_sheet(productData);
+            XLSX.utils.book_append_sheet(wb, ws5, 'Product Performance');
+            
+            // 6. Energy Requirements
+            const energyData = [
+                ['Project', 'Energy Specification', 'Reference'],
+                ['Mt. Holland', '105,000 MWh/year', 'p.71'],
+                ['Ewoyaa', 'Low consumption (DMS advantage)', 'p.2'],
+                ['Grota do Cirilo', '~6.7 MW (Phase 1)', 'p.23']
+            ];
+            const ws6 = XLSX.utils.aoa_to_sheet(energyData);
+            XLSX.utils.book_append_sheet(wb, ws6, 'Energy Requirements');
+            
+            // 7. Water Consumption
+            const waterData = [
+                ['Project', 'Water Usage', 'Reference'],
+                ['Mt. Holland', '3,428 m³/day (shared facility)', 'p.71'],
+                ['Ewoyaa', 'Low consumption', 'p.2'],
+                ['Grota do Cirilo', '35 m³/hr', 'p.23']
+            ];
+            const ws7 = XLSX.utils.aoa_to_sheet(waterData);
+            XLSX.utils.book_append_sheet(wb, ws7, 'Water Consumption');
+            
+            // 8. Reagents & Consumables
+            const reagentsData = [
+                ['Project', 'Key Consumables', 'Environmental Note'],
+                ['Mt. Holland', 'N/S', '-'],
+                ['Ewoyaa', 'DMS media (minimal)', 'Low carbon footprint'],
+                ['Grota do Cirilo', 'Ferrosilicon, flocculant', 'Standard reagent suite']
+            ];
+            const ws8 = XLSX.utils.aoa_to_sheet(reagentsData);
+            XLSX.utils.book_append_sheet(wb, ws8, 'Reagents Consumables');
+            
+            // 9. CAPEX Analysis
+            const capexData = [
+                ['Project', 'Total CAPEX (US$M)', 'Proportion of Total Project', 'Reference'],
+                ['Mt. Holland', 453.6, '37% of US$1.226B total', 'p.12, 16'],
+                ['Ewoyaa', 125.0, 'Project-specific', 'p.2, 13'],
+                ['Grota do Cirilo - Xuxa', 69.8, 'Phase 1', 'p.31'],
+                ['Grota do Cirilo - Barreiro/NDC', 96.3, 'Phases 2&3', 'p.31']
+            ];
+            const ws9 = XLSX.utils.aoa_to_sheet(capexData);
+            XLSX.utils.book_append_sheet(wb, ws9, 'CAPEX Analysis');
+            
+            // 10. OPEX Analysis
+            const opexData = [
+                ['Project', 'OPEX Rate', 'Basis', 'Reference'],
+                ['Mt. Holland', '50% of US$4,989/t', 'Per ton LiOH (integrated)', 'p.13'],
+                ['Ewoyaa', 'US$7.77/t', 'Per tonne ore processed', 'p.48'],
+                ['Grota do Cirilo - Xuxa', 'US$10.4/t', 'Per tonne ore feed', 'p.32'],
+                ['Grota do Cirilo - Barreiro/NDC', 'US$7.1/t', 'Per tonne ore feed', 'p.32']
+            ];
+            const ws10 = XLSX.utils.aoa_to_sheet(opexData);
+            XLSX.utils.book_append_sheet(wb, ws10, 'OPEX Analysis');
+            
+            // 11. Summary Comparison
+            const summaryData = [
+                ['Metric', 'Mt. Holland', 'Ewoyaa', 'Grota do Cirilo (Best)'],
+                ['Processing Complexity', 'High (integrated)', 'Low (DMS-only)', 'Moderate'],
+                ['Recovery Rate (%)', '77.2', '62.5', '60.4 (Xuxa)'],
+                ['CAPEX (US$M)', '453.6', '125.0', '69.8 (Xuxa)'],
+                ['OPEX Approach', 'Integrated per LiOH', 'Per tonne ore', 'Per tonne feed'],
+                ['Key Advantage', 'Highest recovery', 'Simple processing', 'Phased development'],
+                ['Environmental Focus', 'Integrated approach', 'Low carbon footprint', 'Standard practices']
+            ];
+            const ws11 = XLSX.utils.aoa_to_sheet(summaryData);
+            XLSX.utils.book_append_sheet(wb, ws11, 'Summary Comparison');
+            
+            // Auto-size columns for all worksheets
+            const worksheets = [ws1, ws2, ws3, ws4, ws5, ws6, ws7, ws8, ws9, ws10, ws11];
+            worksheets.forEach(ws => {
+                const range = XLSX.utils.decode_range(ws['!ref']);
+                const colWidths = [];
+                for (let col = range.s.c; col <= range.e.c; col++) {
+                    let maxWidth = 0;
+                    for (let row = range.s.r; row <= range.e.r; row++) {
+                        const cellAddress = XLSX.utils.encode_cell({r: row, c: col});
+                        const cell = ws[cellAddress];
+                        if (cell && cell.v) {
+                            const cellLength = cell.v.toString().length;
+                            if (cellLength > maxWidth) {
+                                maxWidth = cellLength;
+                            }
+                        }
+                    }
+                    colWidths.push({wch: Math.min(maxWidth + 2, 50)});
+                }
+                ws['!cols'] = colWidths;
+            });
+            
+            // Save file
+            XLSX.writeFile(wb, 'Spodumene_Project_Data_Analysis.xlsx');
+        }
+    </script>
+</body>
+</html>
